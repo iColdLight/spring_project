@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.8'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-	id "org.flywaydb.flyway" version "9.8.1"
+	id "org.flywaydb.flyway" version "6.0.8"
 }
 
 group = 'com.coldlight'
@@ -30,8 +30,8 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-core'
 	implementation 'org.springframework.security:spring-security-config'
 	implementation 'org.springframework.security:spring-security-web'
-	implementation 'org.flywaydb:flyway-core:8.2.3'
-	implementation 'org.flywaydb:flyway-mysql'
+	implementation 'org.flywaydb:flyway-core:6.0.8'
+	/*implementation 'org.flywaydb:flyway-mysql'*/
 	implementation 'javax.validation:validation-api'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	compileOnly 'org.projectlombok:lombok'
@@ -56,7 +56,7 @@ tasks.named('test') {
 }
 
 flyway {
-	url = 'jdbc:mysql://localhost:3306/springproject?useSSL=false&useUnicode=true&character_set_server=utf8mb4'
+	url = 'jdbc:mysql://localhost:3306/springproject?allowPublicKeyRetrieval=true&useSSL=false'
 	user = 'Coldlight'
 	password = 'Coldlight'
 }
