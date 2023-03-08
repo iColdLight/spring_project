@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,7 +25,6 @@ public class Role {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @ManyToMany (mappedBy = "roles", fetch = FetchType.LAZY)
+    private List<UserEntity> users;
 }

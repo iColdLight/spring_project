@@ -49,7 +49,7 @@ public class UserEntity {
     @Column(name = "user_updated")
     private Date updated;
 
-    @Column(name = "file_status")
+    @Column(name = "user_status")
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
@@ -59,8 +59,9 @@ public class UserEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
     private List<EventEntity> events = new ArrayList<>();
 
-    @Builder.Default
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles = new ArrayList<>();
-
 }

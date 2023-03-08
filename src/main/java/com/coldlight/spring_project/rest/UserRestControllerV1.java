@@ -1,8 +1,11 @@
 package com.coldlight.spring_project.rest;
 
+import com.coldlight.spring_project.dto.UserDto;
+import com.coldlight.spring_project.mapper.MyUserMapper;
+import com.coldlight.spring_project.mapper.UserMapper;
 import com.coldlight.spring_project.model.UserEntity;
 import com.coldlight.spring_project.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,16 +15,21 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 public class UserRestControllerV1 {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    private final UserMapper userMapper;
+
+    private final MyUserMapper myUserMapper;
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserEntity> getUserById(@PathVariable("id") Long userId){
+    public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId){
         if (userId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -29,41 +37,48 @@ public class UserRestControllerV1 {
         if (userEntity == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(userEntity, HttpStatus.OK);
+        UserDto result = userMapper.toDto(userEntity);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<UserEntity>> getAllUsers(){
+    public ResponseEntity<List<UserDto>> getAllUsers(){
         List<UserEntity> users = this.userService.getAll();
         if(users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        List<UserDto> userDtos =
+                users
+                        .stream()
+                        .map(userMapper::toDto)
+                        .collect(Collectors.toList());
+        return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserEntity> saveUser(@RequestBody @Valid UserEntity userEntity){
+    public ResponseEntity<UserDto> saveUser(@RequestBody @Valid UserDto userDto){
         HttpHeaders headers = new HttpHeaders();
-        if(userEntity == null){
+        if(userDto == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        UserEntity userEntity = myUserMapper.toEntity(userDto);
         this.userService.register(userEntity);
-
-        return new ResponseEntity<>(userEntity, headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(userDto, headers, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserEntity> updateUser(@RequestBody @Valid UserEntity userEntity, UriComponentsBuilder builder){
+    public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UserDto userDto, UriComponentsBuilder builder){
         HttpHeaders headers = new HttpHeaders();
-        if(userEntity == null){
+        if(userDto == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        UserEntity userEntity = userMapper.toEntity(userDto);
         this.userService.register(userEntity);
-        return new ResponseEntity<>(userEntity, headers, HttpStatus.OK);
+        return new ResponseEntity<>(userDto, headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserEntity> deleteUser(@PathVariable("id") Long userId){
+    public ResponseEntity<UserDto> deleteUser(@PathVariable("id") Long userId){
         if (userId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -71,7 +86,8 @@ public class UserRestControllerV1 {
         if (userEntity == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        UserDto result = userMapper.toDto(userEntity);
         this.userService.delete(userId);
-        return new ResponseEntity<>(userEntity, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
     }
 }

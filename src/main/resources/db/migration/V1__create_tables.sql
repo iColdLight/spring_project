@@ -1,5 +1,6 @@
+create SCHEMA IF NOT EXISTS springproject;
 create TABLE IF NOT EXISTS springproject.users (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT NOT NULL PRIMARY KEY,
     first_name VARCHAR(255),
     last_name VARCHAR(255),
     user_name VARCHAR(255),
@@ -12,24 +13,32 @@ create TABLE IF NOT EXISTS springproject.users (
 );
 
 create TABLE IF NOT EXISTS springproject.files (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT NOT NULL PRIMARY KEY,
     name VARCHAR(255),
     file_path VARCHAR(255),
     deleted BOOLEAN
 );
 
 create TABLE IF NOT EXISTS springproject.events (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT NOT NULL PRIMARY KEY,
     file_created TIMESTAMP,
     file_status VARCHAR(255),
     user_id BIGINT NOT NULL,
     file_id BIGINT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (file_id) REFERENCES files (id)
+    FOREIGN KEY (user_id) REFERENCES springproject.users (id),
+    FOREIGN KEY (file_id) REFERENCES springproject.files (id)
 );
 
 create TABLE IF NOT EXISTS springproject.roles (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT NOT NULL PRIMARY KEY,
     name VARCHAR(255),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    user_id BIGINT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES springproject.users (id)
+);
+
+create TABLE IF NOT EXISTS springproject.user_roles (
+    user_id BIGINT NOT NULL,
+    file_id BIGINT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES springproject.users (id),
+    FOREIGN KEY (file_id) REFERENCES springproject.files (id)
 );

@@ -31,15 +31,20 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-config'
 	implementation 'org.springframework.security:spring-security-web'
 	implementation 'org.flywaydb:flyway-core:6.0.8'
+	implementation 'org.modelmapper:modelmapper:2.1.1'
 	/*implementation 'org.flywaydb:flyway-mysql'*/
 	implementation 'javax.validation:validation-api'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'org.postgresql:postgresql:42.1.4'
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+	implementation 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 	compileOnly 'org.projectlombok:lombok'
-	implementation 'mysql:mysql-connector-java'
+	/*implementation 'mysql:mysql-connector-java'*/
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.testcontainers:junit-jupiter'
-	testImplementation 'org.testcontainers:mysql'
+	/*testImplementation 'org.testcontainers:mysql'*/
+
 
 
 }
@@ -56,7 +61,7 @@ tasks.named('test') {
 }
 
 flyway {
-	url = 'jdbc:mysql://localhost:3306/springproject?allowPublicKeyRetrieval=true&useSSL=false'
-	user = 'Coldlight'
-	password = 'Coldlight'
+	url = 'jdbc:postgresql://localhost:5432/spring_project'
+	user = 'admin'
+	password = 'admin'
 }
