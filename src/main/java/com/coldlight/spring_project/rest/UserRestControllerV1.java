@@ -1,7 +1,6 @@
 package com.coldlight.spring_project.rest;
 
 import com.coldlight.spring_project.dto.UserDto;
-import com.coldlight.spring_project.mapper.MyUserMapper;
 import com.coldlight.spring_project.mapper.UserMapper;
 import com.coldlight.spring_project.model.UserEntity;
 import com.coldlight.spring_project.service.UserService;
@@ -26,7 +25,6 @@ public class UserRestControllerV1 {
 
     private final UserMapper userMapper;
 
-    private final MyUserMapper myUserMapper;
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId){
@@ -61,7 +59,7 @@ public class UserRestControllerV1 {
         if(userDto == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        UserEntity userEntity = myUserMapper.toEntity(userDto);
+        UserEntity userEntity = userMapper.toEntity(userDto);
         this.userService.register(userEntity);
         return new ResponseEntity<>(userDto, headers, HttpStatus.CREATED);
     }
