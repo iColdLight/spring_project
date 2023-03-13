@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -25,7 +26,7 @@ public class AdminRestControllerV1 {
     private final AdminUserMapper adminUserMapper;
 
 
-    @RequestMapping(value = "user/{id}")
+    @GetMapping(value = "user/{id}")
     public ResponseEntity<AdminUserDto> getUserById(@PathVariable("id") Long userId){
         UserEntity userEntity = this.userService.getById(userId);
         if (userEntity == null){
@@ -35,7 +36,7 @@ public class AdminRestControllerV1 {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "users", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<UserDto>> getAllUsers(){
         List<UserEntity> users = this.userService.getAll();
         if(users.isEmpty()) {
@@ -49,7 +50,7 @@ public class AdminRestControllerV1 {
         return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<AdminUserDto> saveUser(@RequestBody @Valid AdminUserDto adminUserDto){
         HttpHeaders headers = new HttpHeaders();
         if(adminUserDto == null){
@@ -58,5 +59,30 @@ public class AdminRestControllerV1 {
         UserEntity userEntity = adminUserMapper.toEntity(adminUserDto);
         this.userService.register(userEntity);
         return new ResponseEntity<>(adminUserDto, headers, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AdminUserDto> updateUser(@RequestBody @Valid AdminUserDto adminUserDto, UriComponentsBuilder builder){
+        HttpHeaders headers = new HttpHeaders();
+        if(adminUserDto == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        UserEntity userEntity = adminUserMapper.toEntity(adminUserDto);
+        this.userService.register(userEntity);
+        return new ResponseEntity<>(adminUserDto, headers, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "user/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AdminUserDto> deleteUser(@PathVariable("id") Long userId){
+        if (userId == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        UserEntity userEntity = this.userService.getById(userId);
+        if (userEntity == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        AdminUserDto result = adminUserMapper.toDto(userEntity);
+        this.userService.delete(userId);
+        return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
     }
 }

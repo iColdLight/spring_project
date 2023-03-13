@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -16,12 +17,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/files")
+@Secured({"ROLE_USER", "ROLE_MODERATOR", "ROLE_ADMIN"})
 public class FileRestControllerV1 {
 
     @Autowired
     private FileService fileService;
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<FileEntity> getFileById(@PathVariable("id") Long fileId) {
         if (fileId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -33,7 +35,7 @@ public class FileRestControllerV1 {
         return new ResponseEntity<>(fileEntity, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<FileEntity>> getAllFiles(){
         List<FileEntity> files = this.fileService.getAll();
         if(files.isEmpty()) {
@@ -42,7 +44,7 @@ public class FileRestControllerV1 {
         return new ResponseEntity<>(files, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<FileEntity> saveFile(@RequestBody @Valid FileEntity fileEntity){
         HttpHeaders headers = new HttpHeaders();
         if(fileEntity == null){
@@ -53,7 +55,7 @@ public class FileRestControllerV1 {
         return new ResponseEntity<>(fileEntity, headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<FileEntity> updateFile(@RequestBody @Valid FileEntity fileEntity, UriComponentsBuilder builder){
         HttpHeaders headers = new HttpHeaders();
         if(fileEntity == null){
@@ -63,7 +65,7 @@ public class FileRestControllerV1 {
         return new ResponseEntity<>(fileEntity, headers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<FileEntity> deleteFile(@PathVariable("id") Long fileId){
         if (fileId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

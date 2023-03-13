@@ -1,5 +1,6 @@
 package com.coldlight.spring_project.config;
 
+import com.coldlight.spring_project.model.RoleStatus;
 import com.coldlight.spring_project.security.jwt.JwtConfigurer;
 import com.coldlight.spring_project.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Spring Security configuration class.
@@ -48,9 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .antMatchers(HttpMethod.GET, USER_ENDPOINT, FILES_ENDPOINT, EVENTS_ENDPOINT).hasRole("USER")
-                .antMatchers(MODERATOR_ENDPOINT, FILES_ENDPOINT, EVENTS_ENDPOINT).hasRole("MODERATOR")
-                .anyRequest().hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, USER_ENDPOINT, FILES_ENDPOINT, EVENTS_ENDPOINT).hasRole(String.valueOf(RoleStatus.USER))
+                .antMatchers(MODERATOR_ENDPOINT, FILES_ENDPOINT, EVENTS_ENDPOINT).hasRole(String.valueOf(RoleStatus.MODERATOR))
+                .anyRequest().hasRole(String.valueOf(RoleStatus.ADMIN))
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
     }

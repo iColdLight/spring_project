@@ -34,7 +34,8 @@ public class JwtTokenProvider {
 
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsService jwtUserDetailsService;
+
 
 
     @PostConstruct
@@ -59,7 +60,7 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
+        UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(getUsername(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -89,7 +90,7 @@ public class JwtTokenProvider {
         List<String> result = new ArrayList<>();
 
         userRoles.forEach(role -> {
-            result.add(role.getName());
+            result.add(String.valueOf(role.getRoleStatus()));
         });
 
         return result;

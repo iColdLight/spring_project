@@ -22,9 +22,9 @@ public class Role {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    @Column(name = "name")
-    private String name;
-
-    @ManyToMany (mappedBy = "roles", fetch = FetchType.LAZY)
+    @Column(name = "role_status")
+    @Enumerated(EnumType.STRING)
+    private RoleStatus roleStatus;
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<UserEntity> users;
 }

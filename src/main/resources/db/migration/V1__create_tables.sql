@@ -31,7 +31,7 @@ create TABLE IF NOT EXISTS springproject.events (
 
 create TABLE IF NOT EXISTS springproject.roles (
     id BIGINT NOT NULL PRIMARY KEY,
-    name VARCHAR(255),
+    user_status VARCHAR(255),
     user_id BIGINT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES springproject.users (id)
 );
