@@ -1,14 +1,0 @@
-
-t
-java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(Ë²«Šşÿÿÿÿ
-t
-java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(µöŠÿÿÿÿÿ
-t
-java:S2293 "YReplace the type specification in this constructor call with the diamond operator ("<>").(öÕó–ÿÿÿÿÿ
-^
-java:S1874"CRemove this use of "APPLICATION_JSON_UTF8_VALUE"; it is deprecated.(”ÓÚÁıÿÿÿÿ
-Y
-java:S1874""CRemove this use of "APPLICATION_JSON_UTF8_VALUE"; it is deprecated.(ä±—ß
-w
-java:S1128
-"URemove this unused import 'org.springframework.security.access.prepost.PreAuthorize'.(ˆ†×ùÿÿÿÿ8ÎŠ¶í0
