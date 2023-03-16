@@ -22,10 +22,6 @@ import java.util.List;
 @Component
 public class JwtTokenProvider {
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
     @Value("${jwt.token.secret}")
     private String secret;
 
@@ -35,8 +31,6 @@ public class JwtTokenProvider {
 
     @Autowired
     private UserDetailsService jwtUserDetailsService;
-
-
 
     @PostConstruct
     protected void init() {

@@ -1,6 +1,7 @@
 package com.coldlight.spring_project.service.impl;
 
 import com.coldlight.spring_project.model.Role;
+import com.coldlight.spring_project.model.RoleStatus;
 import com.coldlight.spring_project.model.UserEntity;
 import com.coldlight.spring_project.model.UserStatus;
 import com.coldlight.spring_project.repository.RoleRepository;
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity register(UserEntity userEntity) {
-        Role roleUser = roleRepository.findByName("ROLE_USER");
+        Role roleUser = roleRepository.findByRoleStatus(RoleStatus.USER);
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(roleUser);
 

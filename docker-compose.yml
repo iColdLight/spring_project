@@ -4,7 +4,7 @@ services:
     container_name: mydb
     image: postgres:12.0-alpine
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_DB=spring_project
