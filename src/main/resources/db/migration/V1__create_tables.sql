@@ -22,7 +22,7 @@ create TABLE IF NOT EXISTS springproject.files (
 create TABLE IF NOT EXISTS springproject.events (
     id BIGINT NOT NULL PRIMARY KEY,
     file_created TIMESTAMP,
-    file_status VARCHAR(255),
+    event_status VARCHAR(255),
     user_id BIGINT NOT NULL,
     file_id BIGINT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES springproject.users (id),

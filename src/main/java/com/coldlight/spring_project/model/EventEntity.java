@@ -26,9 +26,9 @@ public class EventEntity {
     @Column(name = "file_created")
     private Date date;
 
-    @Column(name = "file_status")
+    @Column(name = "event_status")
     @Enumerated(EnumType.STRING)
-    private FileStatus fileStatus;
+    private EventStatus eventStatus;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

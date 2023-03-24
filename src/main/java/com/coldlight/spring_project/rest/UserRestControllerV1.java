@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -25,7 +26,7 @@ public class UserRestControllerV1 {
 
     private final UserMapper userMapper;
 
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR', 'ROLE_USER')")
     @GetMapping (value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId){
         if (userId == null){
@@ -38,7 +39,7 @@ public class UserRestControllerV1 {
         UserDto result = userMapper.toDto(userEntity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR', 'ROLE_USER')")
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<UserDto>> getAllUsers(){
         List<UserEntity> users = this.userService.getAll();
@@ -52,7 +53,7 @@ public class UserRestControllerV1 {
                         .collect(Collectors.toList());
         return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDto> saveUser(@RequestBody @Valid UserDto userDto){
         HttpHeaders headers = new HttpHeaders();
@@ -63,7 +64,7 @@ public class UserRestControllerV1 {
         this.userService.register(userEntity);
         return new ResponseEntity<>(userDto, headers, HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PutMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UserDto userDto, UriComponentsBuilder builder){
         HttpHeaders headers = new HttpHeaders();
@@ -74,7 +75,7 @@ public class UserRestControllerV1 {
         this.userService.register(userEntity);
         return new ResponseEntity<>(userDto, headers, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDto> deleteUser(@PathVariable("id") Long userId){
         if (userId == null){
