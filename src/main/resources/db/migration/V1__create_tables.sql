@@ -1,4 +1,5 @@
 create SCHEMA IF NOT EXISTS springproject;
+CREATE SEQUENCE springproject.hibernate_sequence START 1 INCREMENT 1;
 create TABLE IF NOT EXISTS springproject.users (
     id BIGINT NOT NULL PRIMARY KEY,
     first_name VARCHAR(255),
@@ -31,14 +32,12 @@ create TABLE IF NOT EXISTS springproject.events (
 
 create TABLE IF NOT EXISTS springproject.roles (
     id BIGINT NOT NULL PRIMARY KEY,
-    user_status VARCHAR(255),
-    user_id BIGINT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES springproject.users (id)
+    role_status VARCHAR(255)
 );
 
 create TABLE IF NOT EXISTS springproject.user_roles (
     user_id BIGINT NOT NULL,
-    file_id BIGINT NOT NULL,
+    role_id BIGINT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES springproject.users (id),
-    FOREIGN KEY (file_id) REFERENCES springproject.files (id)
+    FOREIGN KEY (role_id) REFERENCES springproject.roles (id)
 );

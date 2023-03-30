@@ -22,11 +22,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final String LOGIN_ENDPOINT = "/api/v1/auth/login";
-    private static final String USER_ENDPOINT = "/api/v1/users/**";
-    private static final String ADMIN_ENDPOINT = "/api/v1/admins/**";
-    private static final String MODERATOR_ENDPOINT = "/api/v1/moderators/**";
-    private static final String FILES_ENDPOINT = "/api/v1/files/**";
-    private static final String EVENTS_ENDPOINT = "/api/v1/events/**";
 
     @Autowired
     public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
@@ -48,8 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .antMatchers(HttpMethod.GET, USER_ENDPOINT, FILES_ENDPOINT, EVENTS_ENDPOINT).hasRole(String.valueOf(RoleStatus.USER))
-                .antMatchers(MODERATOR_ENDPOINT, FILES_ENDPOINT, EVENTS_ENDPOINT).hasRole(String.valueOf(RoleStatus.MODERATOR))
                 .anyRequest().hasRole(String.valueOf(RoleStatus.ADMIN))
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));

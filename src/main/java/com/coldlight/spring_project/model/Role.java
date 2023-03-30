@@ -1,9 +1,6 @@
 package com.coldlight.spring_project.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -25,6 +22,7 @@ public class Role {
     @Column(name = "role_status")
     @Enumerated(EnumType.STRING)
     private RoleStatus roleStatus;
+    @ToString.Exclude
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<UserEntity> users;
 }

@@ -1,5 +1,6 @@
 package com.coldlight.spring_project.service.impl;
 
+import com.coldlight.spring_project.model.EventEntity;
 import com.coldlight.spring_project.model.FileEntity;
 import com.coldlight.spring_project.repository.FileRepository;
 import com.coldlight.spring_project.service.FileService;
