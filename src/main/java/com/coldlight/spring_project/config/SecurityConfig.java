@@ -4,6 +4,7 @@ import com.coldlight.spring_project.model.RoleStatus;
 import com.coldlight.spring_project.security.jwt.JwtConfigurer;
 import com.coldlight.spring_project.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
  */
 
 @Configuration
+@ConditionalOnProperty (name = "security.enabled", havingValue = "true")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;

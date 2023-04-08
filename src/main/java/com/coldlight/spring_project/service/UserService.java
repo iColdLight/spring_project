@@ -11,8 +11,6 @@ public interface UserService {
 
     UserEntity register (UserEntity userEntity);
 
-    UserEntity update (UserEntity userEntity);
-
     void delete(Long id);
 
     List<UserEntity> getAll();

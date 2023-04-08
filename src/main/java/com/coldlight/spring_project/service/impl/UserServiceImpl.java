@@ -47,12 +47,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity update(UserEntity userEntity) {
-        log.info("IN userRepository update {}", userEntity);
-        return null;
-    }
-
-    @Override
     public void delete(Long id) {
         log.info("IN userRepository delete {}", id);
         userRepository.deleteById(id);
