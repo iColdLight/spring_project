@@ -1,3 +1,4 @@
+
 package com.coldlight.spring_project.support;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -8,3 +9,4 @@ import org.springframework.boot.test.context.TestConfiguration;
 @EnableAutoConfiguration(exclude = SecurityAutoConfiguration.class)
 public class SecurityConfig {
 }
+

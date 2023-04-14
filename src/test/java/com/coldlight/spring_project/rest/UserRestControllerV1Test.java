@@ -1,3 +1,5 @@
+
+
 package com.coldlight.spring_project.rest;
 
 import com.coldlight.spring_project.Application;
@@ -68,5 +70,4 @@ public class UserRestControllerV1Test {
                 .getResponse().getContentAsString();
         ResponseEntity responseEntity = objectMapper.convertValue(contentAsString, ResponseEntity.class);
     }
-
 }
