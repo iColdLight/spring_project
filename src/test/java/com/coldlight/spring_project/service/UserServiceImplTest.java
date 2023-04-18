@@ -20,8 +20,8 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -78,7 +78,7 @@ public class UserServiceImplTest {
         when(userRepository.save(user)).thenThrow(new RuntimeException());
 
         //then
-        Assertions.assertThrows(RuntimeException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             userService.register(user);
         });
 

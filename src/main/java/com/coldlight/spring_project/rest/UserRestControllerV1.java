@@ -53,7 +53,7 @@ public class UserRestControllerV1 {
                         .collect(Collectors.toList());
         return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR', 'USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR', 'ROLE_USER')")
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDto> saveUser(@RequestBody @Valid UserDto userDto){
         HttpHeaders headers = new HttpHeaders();

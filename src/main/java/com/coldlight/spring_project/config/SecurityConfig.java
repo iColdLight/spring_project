@@ -18,7 +18,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
  */
 
 @Configuration
-@ConditionalOnProperty (name = "security.enabled", havingValue = "true")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -45,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .anyRequest().hasRole(String.valueOf(RoleStatus.ADMIN))
+                .anyRequest().hasRole(String.valueOf(RoleStatus.USER))
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
     }

@@ -38,6 +38,7 @@ dependencies {
 	implementation 'org.postgresql:postgresql:42.3.3'
 	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
 	implementation 'com.amazonaws:aws-java-sdk:1.12.52'
+	implementation 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 	compileOnly 'org.projectlombok:lombok'
 	/*implementation 'mysql:mysql-connector-java'*/
@@ -47,6 +48,8 @@ dependencies {
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.springframework.security:spring-security-test'
+	//testImplementation 'org.mockito:mockito-core:5.2.0'
+	//testImplementation 'org.springframework:spring-test'
 	/*testImplementation 'org.testcontainers:mysql'*/
 
 
