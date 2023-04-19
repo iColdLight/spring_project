@@ -7,11 +7,13 @@ import com.coldlight.spring_project.model.FileEntity;
 import com.coldlight.spring_project.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -63,18 +65,19 @@ public class FileRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         FileEntity fileEntity = fileMapper.toEntity(fileDto);
+        //найти как передать юзера в метод fileService.save()
         this.fileService.save(fileEntity);
         return new ResponseEntity<>(fileDto, headers, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<FileDto> updateFile(@RequestBody @Valid FileDto fileDto, UriComponentsBuilder builder){
+    public ResponseEntity<FileDto> updateFile(@RequestBody @Valid FileDto fileDto, Long userId, UriComponentsBuilder builder){
         HttpHeaders headers = new HttpHeaders();
         if(fileDto == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         FileEntity fileEntity = fileMapper.toEntity(fileDto);
-        this.fileService.save(fileEntity);
+        this.fileService.save(fileEntity, userId);
         return new ResponseEntity<>(fileDto, headers, HttpStatus.OK);
     }
 

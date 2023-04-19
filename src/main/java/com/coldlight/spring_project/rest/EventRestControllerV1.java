@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 @Secured({"ROLE_USER", "ROLE_MODERATOR", "ROLE_ADMIN"})
 public class EventRestControllerV1 {
 
-    @Autowired
-    private EventService eventService;
+
+    private final EventService eventService;
     private final EventMapper eventMapper;
 
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

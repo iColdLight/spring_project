@@ -16,23 +16,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -43,8 +37,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class UserRestControllerV1Test {
     @Autowired
     private UserRestControllerV1 userRestControllerV1;
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -88,22 +80,22 @@ public class UserRestControllerV1Test {
         user.setPassword("qwerty123");
         user.setEmail("igor@gmail.com");
 
-        userRestControllerV1.saveUser(user);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/v1/users")
+                        .content(objectMapper.writeValueAsString(user))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
 
-        String contentAsString = mockMvc.perform(MockMvcRequestBuilders
+        mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/v1/users/1")
-                .content(objectMapper.writeValueAsString(user))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn()
-                .getResponse().getContentAsString();
-        UserDto result = objectMapper.readValue(contentAsString, UserDto.class);
-
-        assertEquals("Igor", result.getFirstName());
-        assertEquals("Popovich", result.getLastName());
-        assertEquals("IGPO", result.getUserName());
-        assertNotNull( result.getPassword());
-        assertEquals("igor@gmail.com", result.getEmail());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Igor"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Popovich"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.userName").value("IGPO"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("igor@gmail.com"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.password").exists());
     }
 
     @Test
@@ -127,32 +119,24 @@ public class UserRestControllerV1Test {
 
         UserDto userDto = userMapper.toDto(user);
         UserDto userDto2 = userMapper.toDto(user2);
-
         userRestControllerV1.saveUser(userDto);
         userRestControllerV1.saveUser(userDto2);
 
-        Map<String, UserDto> map = new HashMap<>();
-        map.put("User1", userDto);
-        map.put("User2", userDto2);
-
-        String contentAsString = mockMvc.perform(MockMvcRequestBuilders
-                        .get("/api/v1/users")
-                        .content(objectMapper.writeValueAsString(map))
-                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/api/v1/users")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn()
-                .getResponse().getContentAsString();
-        UserDto result = objectMapper.readValue(contentAsString, UserDto.class);
-
-        ResponseEntity<List<UserDto>> allUsers = userRestControllerV1.getAllUsers();
-        List<UserDto> allUsersResult = objectMapper.readValue(allUsers, ResponseEntity.class);
-
-        assertEquals("Igor", result.getFirstName());
-        assertEquals("Popovich", result.getLastName());
-        assertEquals("IGPO", result.getUserName());
-        assertNotNull( result.getPassword());
-        assertEquals("igor@gmail.com", result.getEmail());
-
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].firstName").value("Igor"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].lastName").value("Popovich"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].userName").value("IGPO"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].email").value("igor@gmail.com"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].password").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[1].firstName").value("Carl"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[1].lastName").value("Smith"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[1].userName").value("CS"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[1].email").value("carl@gmail.com"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[1].password").exists());
     }
 
     @Test

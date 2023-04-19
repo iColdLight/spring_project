@@ -10,5 +10,5 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EventDto {
     private Date date;
-    private EventStatus fileStatus;
+    private EventStatus eventStatus;
 }

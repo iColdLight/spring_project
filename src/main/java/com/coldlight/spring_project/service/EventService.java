@@ -1,6 +1,7 @@
 package com.coldlight.spring_project.service;
 
 import com.coldlight.spring_project.model.EventEntity;
+import com.coldlight.spring_project.model.FileEntity;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
  */
 public interface EventService {
 
+    void save (EventEntity eventEntity);
     List<EventEntity> getAll();
 
     EventEntity getById(Long id);

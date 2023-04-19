@@ -1,12 +1,16 @@
 package com.coldlight.spring_project.service.impl;
 
 import com.coldlight.spring_project.model.EventEntity;
+import com.coldlight.spring_project.model.EventStatus;
 import com.coldlight.spring_project.model.FileEntity;
+import com.coldlight.spring_project.model.UserEntity;
 import com.coldlight.spring_project.repository.FileRepository;
 import com.coldlight.spring_project.service.FileService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -14,15 +18,26 @@ import java.util.List;
 public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
-
-    public FileServiceImpl(FileRepository fileRepository) {
+    private final UserServiceImpl userService;
+    private final EventServiceImpl eventService;
+    @Autowired
+    public FileServiceImpl(FileRepository fileRepository, UserServiceImpl userService, EventServiceImpl eventService) {
         this.fileRepository = fileRepository;
+        this.userService = userService;
+        this.eventService = eventService;
     }
 
     @Override
-    public void save(FileEntity fileEntity) {
+    public void save(FileEntity fileEntity, Long userId) {
         log.info("IN fileRepository save {}", fileEntity);
+        UserEntity user = userService.getById(userId);
         fileRepository.save(fileEntity);
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.setFile(fileEntity);
+        eventEntity.setUser(user);
+        eventEntity.setEventStatus(EventStatus.CREATED);
+        eventEntity.setDate(new Date());
+        eventService.save(eventEntity);
     }
 
     @Override

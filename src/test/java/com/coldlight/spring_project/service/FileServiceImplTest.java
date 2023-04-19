@@ -53,7 +53,7 @@ public class FileServiceImplTest {
         doNothing().when(fileRepository).save(fileEntityArgumentCaptor.capture());
 
         //then
-        fileService.save(file);
+        fileService.save(file, 1L);
         FileEntity value = fileEntityArgumentCaptor.getValue();
         Assertions.assertEquals(fileName, value.getName());
         Assertions.assertEquals(filePath, value.getFilePath());
@@ -74,7 +74,7 @@ public class FileServiceImplTest {
 
         //then
         Assertions.assertThrows(RuntimeException.class, () -> {
-            fileService.save(file);
+            fileService.save(file, 1L);
         });
     }
 

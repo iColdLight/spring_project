@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface FileService {
 
-    void save (FileEntity fileEntity);
+    void save (FileEntity fileEntity, Long userId);
 
     void delete(Long id);
 
