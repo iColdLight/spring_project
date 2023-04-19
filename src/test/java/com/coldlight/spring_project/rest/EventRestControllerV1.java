@@ -8,7 +8,6 @@ import com.coldlight.spring_project.mapper.FileMapper;
 import com.coldlight.spring_project.model.EventEntity;
 import com.coldlight.spring_project.model.EventStatus;
 import com.coldlight.spring_project.model.FileEntity;
-import com.coldlight.spring_project.repository.EventRepository;
 import com.coldlight.spring_project.support.DataSourceStub;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -19,8 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -29,10 +26,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(SpringRunner.class)
@@ -42,12 +37,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @ContextConfiguration(classes = Application.class)
 @Import(value = DataSourceStub.class)
 public class EventRestControllerV1 {
-    /*@Autowired
-    private EventRestControllerV1 eventRestControllerV1;*/
+
     @Autowired
     private  FileRestControllerV1 fileRestControllerV1;
-    /*@Autowired
-    private EventRepository eventRepository;*/
+
     @Autowired
     private EventMapper eventMapper;
     @Autowired

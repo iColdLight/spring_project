@@ -6,7 +6,6 @@ import com.coldlight.spring_project.Application;
 import com.coldlight.spring_project.dto.UserDto;
 import com.coldlight.spring_project.mapper.UserMapper;
 import com.coldlight.spring_project.model.UserEntity;
-import com.coldlight.spring_project.repository.UserRepository;
 import com.coldlight.spring_project.support.DataSourceStub;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
