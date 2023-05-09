@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -46,6 +47,7 @@ public class UserRestControllerV1Test {
 
     @Test
     @WithMockUser(roles = "USER", username = "IGPO")
+    @Sql({"/mock_data.sql"})
     public void saveUserTest() throws Exception {
         UserDto user = new UserDto();
         user.setFirstName("Igor");
@@ -71,19 +73,20 @@ public class UserRestControllerV1Test {
     }
     @Test
     @WithMockUser(roles = "USER")
+    @Sql({"/mock_data.sql"})
     public void getUserByIdTest() throws Exception{
-        UserDto user = new UserDto();
+        /*UserDto user = new UserDto();
         user.setFirstName("Igor");
         user.setLastName("Popovich");
         user.setUserName("IGPO");
         user.setPassword("qwerty123");
-        user.setEmail("igor@gmail.com");
+        user.setEmail("igor@gmail.com");*/
 
-        mockMvc.perform(MockMvcRequestBuilders
+        /*mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/v1/users")
                         .content(objectMapper.writeValueAsString(user))
                         .contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
+                .andExpect(MockMvcResultMatchers.status().isCreated());*/
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/v1/users/1")
@@ -93,12 +96,13 @@ public class UserRestControllerV1Test {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("Igor"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Popovich"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.userName").value("IGPO"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("igor@gmail.com"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("igor123@gmail.com"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.password").exists());
     }
 
     @Test
     @WithMockUser(roles = "USER")
+    @Sql({"/mock_data.sql"})
     public void getUsersTest() throws Exception{
         UserEntity user = new UserEntity();
         user.setFirstName("Igor");
@@ -140,6 +144,7 @@ public class UserRestControllerV1Test {
 
     @Test
     @WithMockUser(roles = "USER", username = "IGPO")
+    @Sql({"/mock_data.sql"})
     public void deleteUserTest() throws Exception {
         UserDto user = new UserDto();
         user.setFirstName("Igor");

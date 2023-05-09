@@ -27,7 +27,7 @@ public class UserRestControllerV1 {
     private final UserMapper userMapper;
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR', 'ROLE_USER')")
-    @GetMapping (value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping (value = "{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId){
         if (userId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -40,7 +40,7 @@ public class UserRestControllerV1 {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR', 'ROLE_USER')")
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "")
     public ResponseEntity<List<UserDto>> getAllUsers(){
         List<UserEntity> users = this.userService.getAll();
         if(users.isEmpty()) {
@@ -54,7 +54,7 @@ public class UserRestControllerV1 {
         return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR', 'ROLE_USER')")
-    @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "")
     public ResponseEntity<UserDto> saveUser(@RequestBody @Valid UserDto userDto){
         HttpHeaders headers = new HttpHeaders();
         if(userDto == null){
@@ -65,18 +65,7 @@ public class UserRestControllerV1 {
         return new ResponseEntity<>(userDto, headers, HttpStatus.CREATED);
     }
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @PutMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UserDto userDto, UriComponentsBuilder builder){
-        HttpHeaders headers = new HttpHeaders();
-        if(userDto == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        UserEntity userEntity = userMapper.toEntity(userDto);
-        this.userService.register(userEntity);
-        return new ResponseEntity<>(userDto, headers, HttpStatus.OK);
-    }
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DeleteMapping(value = "{id}")
     public ResponseEntity<UserDto> deleteUser(@PathVariable("id") Long userId){
         if (userId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

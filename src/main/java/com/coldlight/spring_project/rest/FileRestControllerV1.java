@@ -4,7 +4,9 @@ package com.coldlight.spring_project.rest;
 import com.coldlight.spring_project.dto.FileDto;
 import com.coldlight.spring_project.mapper.FileMapper;
 import com.coldlight.spring_project.model.FileEntity;
+import com.coldlight.spring_project.model.UserEntity;
 import com.coldlight.spring_project.service.FileService;
+import com.coldlight.spring_project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
@@ -15,9 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,9 +33,10 @@ public class FileRestControllerV1 {
 
     @Autowired
     private FileService fileService;
+    private UserService userService;
     private final FileMapper fileMapper;
 
-    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "{id}")
     public ResponseEntity<FileDto> getFileById(@PathVariable("id") Long fileId) {
         if (fileId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -44,7 +49,7 @@ public class FileRestControllerV1 {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping
     public ResponseEntity<List<FileDto>> getAllFiles(){
         List<FileEntity> files = this.fileService.getAll();
         if(files.isEmpty()) {
@@ -58,30 +63,19 @@ public class FileRestControllerV1 {
         return new ResponseEntity<>(fileDtos, HttpStatus.OK);
     }
 
-    @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<FileDto> saveFile(@RequestBody @Valid FileDto fileDto){
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<Object> saveFile(@RequestPart MultipartFile file, @RequestPart Principal principal){
         HttpHeaders headers = new HttpHeaders();
-        if(fileDto == null){
+        if(file == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        FileEntity fileEntity = fileMapper.toEntity(fileDto);
-        //найти как передать юзера в метод fileService.save()
-        this.fileService.save(fileEntity);
-        return new ResponseEntity<>(fileDto, headers, HttpStatus.CREATED);
+        String name = principal.getName();
+        UserEntity userName = userService.findByUsername(name);
+        this.fileService.save((FileEntity) file, String.valueOf(userName));
+        return new ResponseEntity<>(file, headers, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<FileDto> updateFile(@RequestBody @Valid FileDto fileDto, Long userId, UriComponentsBuilder builder){
-        HttpHeaders headers = new HttpHeaders();
-        if(fileDto == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        FileEntity fileEntity = fileMapper.toEntity(fileDto);
-        this.fileService.save(fileEntity, userId);
-        return new ResponseEntity<>(fileDto, headers, HttpStatus.OK);
-    }
-
-    @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DeleteMapping(value = "{id}")
     public ResponseEntity<FileDto> deleteFile(@PathVariable("id") Long fileId){
         if (fileId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

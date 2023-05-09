@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -43,6 +44,7 @@ public class FileRestControllerV1Test {
 
     @Test
     @WithMockUser(roles = "USER")
+    @Sql({"/mock_data.sql"})
     public void saveFileTest() throws Exception {
         FileDto file = new FileDto();
         file.setName("File");
@@ -63,6 +65,7 @@ public class FileRestControllerV1Test {
 
     @Test
     @WithMockUser(roles = "USER")
+    @Sql({"/mock_data.sql"})
     public void getFileByIdTest() throws Exception{
         FileDto file = new FileDto();
         file.setName("File");
@@ -83,36 +86,26 @@ public class FileRestControllerV1Test {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.filePath").value("File path"));
     }
     @Test
-    @WithMockUser(roles = "USER")
+    @Sql({"/mock_data.sql"})
     public void getFilesTest() throws Exception{
-        FileEntity file = new FileEntity();
-        file.setName("File");
-        file.setFilePath("File path");
-        file.setId(1L);
-
-        FileEntity file2 = new FileEntity();
-        file2.setName("File2");
-        file2.setFilePath("File path2");
-        file2.setId(2L);
-
-        FileDto fileDto = fileMapper.toDto(file);
-        FileDto fileDto2 = fileMapper.toDto(file2);
-        fileRestControllerV1.saveFile(fileDto);
-        fileRestControllerV1.saveFile(fileDto2);
-
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/v1/files")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name").value("File"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].filePath").value("File path"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[1].name").value("File2"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[1].filePath").value("File path2"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name").value("FileOne"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].filePath").value("FilePathOne"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[1].name").value("FileTwo"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[1].filePath").value("FilePathTwo"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[2].name").value("FileThree"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[2].filePath").value("FilePathThree"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[3].name").value("FileFour"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[3].filePath").value("FilePathFour"));
     }
 
     @Test
     @WithMockUser(roles = "USER")
+    @Sql({"/mock_data.sql"})
     public void deleteFileTest() throws Exception {
         FileDto file = new FileDto();
         file.setName("File");

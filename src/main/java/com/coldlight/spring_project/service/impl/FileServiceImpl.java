@@ -5,7 +5,10 @@ import com.coldlight.spring_project.model.EventStatus;
 import com.coldlight.spring_project.model.FileEntity;
 import com.coldlight.spring_project.model.UserEntity;
 import com.coldlight.spring_project.repository.FileRepository;
+import com.coldlight.spring_project.service.EventService;
 import com.coldlight.spring_project.service.FileService;
+import com.coldlight.spring_project.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,22 +18,18 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
-    private final UserServiceImpl userService;
-    private final EventServiceImpl eventService;
-    @Autowired
-    public FileServiceImpl(FileRepository fileRepository, UserServiceImpl userService, EventServiceImpl eventService) {
-        this.fileRepository = fileRepository;
-        this.userService = userService;
-        this.eventService = eventService;
-    }
+    private final UserService userService;
+    private final EventService eventService;
+
 
     @Override
-    public void save(FileEntity fileEntity, Long userId) {
+    public void save(FileEntity fileEntity, String userName) {
         log.info("IN fileRepository save {}", fileEntity);
-        UserEntity user = userService.getById(userId);
+        UserEntity user = userService.findByUsername(userName);
         fileRepository.save(fileEntity);
         EventEntity eventEntity = new EventEntity();
         eventEntity.setFile(fileEntity);

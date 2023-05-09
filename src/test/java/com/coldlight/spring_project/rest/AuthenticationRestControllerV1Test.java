@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -41,6 +42,7 @@ public class AuthenticationRestControllerV1Test {
     private ObjectMapper objectMapper;
     @Test
     @WithMockUser(roles = "USER", username = "IGPO")
+    @Sql({"/mock_data.sql"})
     public void loginTest() throws Exception{
         UserDto user = new UserDto();
         user.setFirstName("Igor");

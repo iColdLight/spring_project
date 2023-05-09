@@ -1,6 +1,7 @@
 package com.coldlight.spring_project.rest;
 
 import com.coldlight.spring_project.dto.AuthenticationRequestDto;
+import com.coldlight.spring_project.dto.AuthenticationResponseDto;
 import com.coldlight.spring_project.model.UserEntity;
 import com.coldlight.spring_project.security.jwt.JwtTokenProvider;
 import com.coldlight.spring_project.service.UserService;
@@ -44,18 +45,18 @@ public class AuthenticationRestControllerV1 {
             UserEntity user = userService.findByUsername(username);
 
             if (user == null) {
-                throw new UsernameNotFoundException("User with username: " + username + " not found");
+                return ResponseEntity.badRequest().body("User with username:" + username + "not found");
             }
 
             String token = jwtTokenProvider.createToken(username, user.getRoles());
 
-            Map<Object, Object> response = new HashMap<>();
-            response.put("username", username);
-            response.put("token", token);
+            return ResponseEntity.ok(AuthenticationResponseDto.builder()
+                    .username(username)
+                    .token(token)
+                    .build());
 
-            return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username or password");
+            return ResponseEntity.badRequest().body("Invalid username or password");
         }
     }
 }

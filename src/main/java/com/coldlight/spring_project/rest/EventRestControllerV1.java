@@ -29,7 +29,7 @@ public class EventRestControllerV1 {
     private final EventService eventService;
     private final EventMapper eventMapper;
 
-    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "{id}")
     public ResponseEntity<EventDto> getEventById(@PathVariable("id") Long eventId) {
         if (eventId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -41,7 +41,7 @@ public class EventRestControllerV1 {
         EventDto result = eventMapper.toDto(eventEntity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping
     public ResponseEntity<List<EventDto>> getAllEvents(){
         List<EventEntity> events = this.eventService.getAll();
         if(events.isEmpty()) {
